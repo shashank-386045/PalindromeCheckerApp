@@ -1,35 +1,57 @@
 
-class PalindromeChecker {
+
+import java.util.*;
 
 
-    public boolean checkPalindrome(String input) {
-
-        String normalized = input.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
-
-
-        return isPalindrome(normalized, 0, normalized.length() - 1);
-    }
-
-
-    private boolean isPalindrome(String str, int start, int end) {
-        if (start >= end) {
-            return true;
-        }
-        if (str.charAt(start) != str.charAt(end)) {
-            return false;
-        }
-        return isPalindrome(str, start + 1, end - 1); // Recursive call
-    }
+interface PalindromeStrategy {
+    boolean checkPalindrome(String input);
 }
 
 
+class StackStrategy implements PalindromeStrategy {
+    @Override
+    public boolean checkPalindrome(String input) {
+        String normalized = input.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
+
+        Stack<Character> stack = new Stack<>();
+        for (char c : normalized.toCharArray()) {
+            stack.push(c);
+        }
+        StringBuilder reversed = new StringBuilder();
+        while (!stack.isEmpty()) {
+            reversed.append(stack.pop());
+        }
+        return normalized.equals(reversed.toString());
+    }
+}
+class DequeStrategy implements PalindromeStrategy {
+    @Override
+    public boolean checkPalindrome(String input) {
+        // Normalize string
+        String normalized = input.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
+
+        Deque<Character> deque = new ArrayDeque<>();
+        for (char c : normalized.toCharArray()) {
+            deque.addLast(c);
+        }
+        while (deque.size() > 1) {
+            if (deque.removeFirst() != deque.removeLast()) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
 public class PalindromeCheckerApp {
     public static void main(String[] args) {
-        PalindromeChecker checker = new PalindromeChecker();
-
         String input = "A man a plan a canal Panama";
-        boolean result = checker.checkPalindrome(input);
-
+        PalindromeStrategy strategy;
+        if (args.length > 0 && args[0].equalsIgnoreCase("stack")) {
+            strategy = new StackStrategy();
+        } else {
+            strategy = new DequeStrategy();
+        }
+        boolean result = strategy.checkPalindrome(input);
         if (result) {
             System.out.println("\"" + input + "\" is a palindrome (ignoring spaces and case).");
         } else {
