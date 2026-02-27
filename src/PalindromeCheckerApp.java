@@ -1,31 +1,34 @@
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.Scanner;
+
 
 public class PalindromeCheckerApp {
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Input: ");
-        String input = scanner.nextLine();
-        Deque<Character> deque = new LinkedList<>();
-        for (char c : input.toCharArray()) {
-            deque.addLast(c);
+
+
+    public static boolean isPalindrome(String str, int start, int end) {
+
+        if (start >= end) {
+            return true;
         }
-        boolean isPalindrome = true;
-        while (deque.size() > 1) {
-            char front = deque.removeFirst();
-            char rear = deque.removeLast();
-            if (front != rear) {
-                isPalindrome = false;
-                break;
-            }
-        }
-        if (isPalindrome) {
-            System.out.println("Is Palindrome?:True");
-        } else {
-            System.out.println("Is palindrome?:false");
+        // Compare characters at start and end
+        if (str.charAt(start) != str.charAt(end)) {
+            return false;
         }
 
-        scanner.close();
+        return isPalindrome(str, start + 1, end - 1);
+    }
+
+    public static void main(String[] args) {
+        String input = "A man a plan a canal Panama";
+
+
+        String normalized = input.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
+
+
+        boolean result = isPalindrome(normalized, 0, normalized.length() - 1);
+
+        if (result) {
+            System.out.println("\"" + input + "\" is a palindrome (ignoring spaces and case).");
+        } else {
+            System.out.println("\"" + input + "\" is not a palindrome.");
+        }
     }
 }
