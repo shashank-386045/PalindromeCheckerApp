@@ -1,30 +1,34 @@
-// File: UseCase10PalindromeCheckerApp.java
 
-public class PalindromeCheckerApp {
+class PalindromeChecker {
 
-    // Recursive method to check palindrome
-    public static boolean isPalindrome(String str, int start, int end) {
-        // Base condition
+
+    public boolean checkPalindrome(String input) {
+
+        String normalized = input.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
+
+
+        return isPalindrome(normalized, 0, normalized.length() - 1);
+    }
+
+
+    private boolean isPalindrome(String str, int start, int end) {
         if (start >= end) {
             return true;
         }
-        // Compare characters at start and end
         if (str.charAt(start) != str.charAt(end)) {
             return false;
         }
-        // Recursive call with smaller substring
-        return isPalindrome(str, start + 1, end - 1);
+        return isPalindrome(str, start + 1, end - 1); // Recursive call
     }
+}
 
+
+public class PalindromeCheckerApp {
     public static void main(String[] args) {
+        PalindromeChecker checker = new PalindromeChecker();
+
         String input = "A man a plan a canal Panama";
-
-        // Step 1: Normalize string
-        // Remove spaces and non-alphanumeric characters, convert to lowercase
-        String normalized = input.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
-
-        // Step 2: Apply previous recursive logic
-        boolean result = isPalindrome(normalized, 0, normalized.length() - 1);
+        boolean result = checker.checkPalindrome(input);
 
         if (result) {
             System.out.println("\"" + input + "\" is a palindrome (ignoring spaces and case).");
